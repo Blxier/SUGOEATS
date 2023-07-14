@@ -39,7 +39,7 @@ const Home = () => {
                   placeholder="Enter delivery address"
                 />
               </div>
-              <div className="OrderNow bg-primary flex items-center justify-center space-x-1 p-2 text-white rounded-full cursor-pointer hover:scale-105 z-10">
+              <div className="OrderNow bg-primary hover:bg-blue flex items-center justify-center space-x-1 p-2 text-white rounded-full cursor-pointer hover:scale-105 z-10">
                 <div>
                   <h1 className="text-xl">Order Now</h1>
                 </div>

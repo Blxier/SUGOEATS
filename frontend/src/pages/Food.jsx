@@ -53,16 +53,16 @@ const Food = () => {
         <div className="mt-14 mb-20">
           <Carousel breakPoints={breakPoints} pagination={false} showArrows>
             {foodData.map((item, index) => (
-              <div class="w-[250px] bg-white rounded-lg shadow-md shadow-black m-2 hover:scale-105 duration-150">
-                <a class="block relative h-48 rounded overflow-hidden">
+              <div className="w-[250px] bg-white rounded-lg shadow-md shadow-black m-2 hover:scale-105 duration-150">
+                <a className="block relative h-48 rounded overflow-hidden">
                   <img
                     alt="ecommerce"
-                    class="object-cover object-center w-full h-full block p-2"
+                    className="object-cover object-center w-full h-full block p-2"
                     src={item.image}
                   />
                 </a>
-                <div class="mt-4 p-2">
-                  <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">
+                <div className="mt-4 p-2">
+                  <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
                     {/* Map through items that has two or more category */}
                     {item.category.map((tem, ndex) => (
                       <a key={ndex} className="text-primary" href="#">
@@ -72,10 +72,10 @@ const Food = () => {
                       </a>
                     ))}
                   </h3>
-                  <h2 class="text-gray-900 title-font text-lg font-medium">
+                  <h2 className="text-gray-900 title-font text-lg font-medium">
                     {item.name}
                   </h2>
-                  <p class="mt-1">$16.00</p>
+                  <p className="mt-1">$16.00</p>
                 </div>
               </div>
             ))}

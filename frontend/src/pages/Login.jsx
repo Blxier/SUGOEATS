@@ -2,23 +2,73 @@ import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineGoogle } from "react-icons/ai";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
-  const [isemailon, setisemailOn] = useState(false);
-  const [ispasson, setispassOn] = useState(false);
+  //FOR LOGIN
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [_, setCookies] = useCookies(["access_token"]);
+  const navigate = useNavigate();
 
-  const handleEmailChange = (event) => {
-    setisemailOn(event.target.value !== "");
-  };
-
-  const handlePasswordChange = (event) => {
-    setispassOn(event.target.value !== "");
+  //ON SUBMIT LOGIN BUTTON
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5001/auth/login", {
+        username,
+        password,
+      });
+      const responseData = response.data;
+      const responseMessage = responseData.message;
+      console.log(responseMessage); // Access the response data
+      if (
+        responseMessage == "User Doesn't Exist!" ||
+        responseMessage == "Password is Incorrect!"
+      ) {
+        toast.error(responseMessage, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        setCookies("access_token", response.data.token);
+        window.localStorage.setItem("userID", response.data.userID);
+        navigate("/");
+      }
+    } catch (err) {
+      console.error(err);
+      console.log("ERROR!");
+    }
   };
 
   return (
     <div>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <section className="mx-0 lg:mx-20">
-        <form>
+        <form onSubmit={onSubmit}>
+          {error && <div>{error}</div>}
           <div className="container px-5 py-24 mx-auto flex flex-wrap md:flex-wrap-reverse items-center">
             <div className="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0 cursor-default">
               <h1 className="title-font font-medium text-8xl">SUGO EATS</h1>
@@ -41,7 +91,8 @@ const Login = () => {
                   name="email"
                   autoComplete="on"
                   required
-                  onChange={handleEmailChange}
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
                   className="w-full bg-white rounded border border-white focus:border-primary focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -58,22 +109,22 @@ const Login = () => {
                   name="password"
                   autoComplete="off"
                   required
-                  onChange={handlePasswordChange}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   className="w-full bg-white rounded border border-white focus:border-primary focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
               <button
                 type="submit"
-                className={
-                  isemailon & ispasson
-                    ? "text-white bg-primary border-0 py-2 px-8 focus:outline-none rounded text-lg hover:scale-105 duration-100"
-                    : "text-black bg-secondary border-0 py-2 px-8 focus:outline-none rounded text-lg cursor-auto"
-                }
+                className="text-white bg-primary border-0 py-2 px-8 focus:outline-none rounded text-lg hover:scale-105 duration-100"
               >
                 Login
               </button>
               <p className="m-auto pt-2">OR</p>
-              <button className="text-white bg-gmail border-0 py-2 px-8 focus:outline-none rounded text-lg hover:scale-105 duration-100 flex items-center justify-center gap-1">
+              <button
+                type="button"
+                className="text-white bg-gmail border-0 py-2 px-8 focus:outline-none rounded text-lg hover:scale-105 duration-100 flex items-center justify-center gap-1"
+              >
                 <AiOutlineGoogle /> Sign in with Google
               </button>
               <p className=" text-gray-500 mt-3 underline cursor-pointer hover:font-semibold">

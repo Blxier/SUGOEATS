@@ -72,7 +72,7 @@ const Login = () => {
                 Register
               </button>
               <Link
-                to="/"
+                to="/Login"
                 className=" text-gray-500 mt-3 underline cursor-pointer hover:font-semibold"
               >
                 Already have an account?
