@@ -28,8 +28,7 @@ const Login = () => {
       const responseMessage = responseData.message;
       console.log(responseMessage); // Access the response data
       if (
-        responseMessage == "User Doesn't Exist!" ||
-        responseMessage == "Password is Incorrect!"
+        responseMessage == "The username or password you entered is incorrect"
       ) {
         toast.error(responseMessage, {
           position: "bottom-center",
@@ -44,6 +43,18 @@ const Login = () => {
       } else {
         setCookies("access_token", response.data.token);
         window.localStorage.setItem("userID", response.data.userID);
+
+        toast.success("Welcome to SUGO!", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
         navigate("/");
       }
     } catch (err) {
