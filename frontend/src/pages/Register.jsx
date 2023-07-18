@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 import { AiOutlineGoogle } from "react-icons/ai";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+// Redux for registration successfull message
+import { preMessage } from "../store";
+import { useDispatch } from "react-redux";
+import { notifyError, notifySuccess } from "../components/Notification";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const Login = () => {
+const Register = () => {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   //FOR LOGIN
   const [username, setUsername] = useState("");
@@ -32,28 +37,9 @@ const Login = () => {
         const responseMessage = responseData.message;
         console.log(responseMessage); // Access the response data
         if (responseMessage == "User already exists") {
-          toast.error("User already exists!", {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          notifyError("User already exists");
         } else {
-          toast.success("User Registered Successfuly!", {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
-
+          dispatch(preMessage({ mssg: responseMessage }));
           navigate("/Login");
         }
       } else {
@@ -186,4 +172,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineGoogle } from "react-icons/ai";
@@ -7,8 +7,15 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { notifyError, notifySuccess } from "../components/Notification";
+// Redux for Login successfull message
+import { preMessage } from "../store";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 const Login = () => {
+  //Redux
+  const premessage = useSelector((state) => state.message.value.mssg);
+  const dispatch = useDispatch();
   //FOR LOGIN
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,34 +34,12 @@ const Login = () => {
       const responseData = response.data;
       const responseMessage = responseData.message;
       console.log(responseMessage); // Access the response data
-      if (
-        responseMessage == "The username or password you entered is incorrect"
-      ) {
-        toast.error(responseMessage, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+      if (responseMessage == "The username or password is incorrect") {
+        notifyError(responseMessage);
       } else {
+        dispatch(preMessage({ mssg: responseMessage }));
         setCookies("access_token", response.data.token);
         window.localStorage.setItem("userID", response.data.userID);
-
-        toast.success("Welcome to SUGO!", {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-
         navigate("/");
       }
     } catch (err) {
@@ -62,6 +47,12 @@ const Login = () => {
       console.log("ERROR!");
     }
   };
+
+  useEffect(() => {
+    if (premessage == "User Registered Sucessfully") {
+      notifySuccess(premessage);
+    }
+  }, []);
 
   return (
     <div>
